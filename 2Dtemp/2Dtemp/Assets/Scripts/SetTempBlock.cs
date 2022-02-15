@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SetBlock : SingletonMonoBehaviour<TempBlockManager>
+public class SetTempBlock : SingletonMonoBehaviour<TempBlockManager>
 {
     // Update is called once per frame
     void Update()
