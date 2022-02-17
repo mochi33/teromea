@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cacheType: 1
-  lastUpdatedAtString: 2022-02-10T02:26:16.505+09:00
-  initializedAtString: 2022-02-09T22:22:16.423+09:00
+  lastUpdatedAtString: 2022-02-17T22:17:38.872+09:00
+  initializedAtString: 2022-02-17T22:17:38.872+09:00
   currentGitRemote:
     name: origin
-    url: https://github.com/Jumpei-graph/Block.git
+    url: https://github.com/mochi33/teromea
     login: 
     user: 
     host: 
@@ -30,9 +30,9 @@ MonoBehaviour:
     name: main
     remote:
       name: origin
-      url: https://github.com/Jumpei-graph/Block.git
+      url: https://github.com/mochi33/teromea
     trackingBranch: main
   currentConfigRemote:
     name: origin
-    url: https://github.com/Jumpei-graph/Block.git
+    url: https://github.com/mochi33/teromea
   currentHead: 
