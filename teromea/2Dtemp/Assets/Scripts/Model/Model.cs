@@ -8,4 +8,6 @@ public class Model
 
     public const int MAX_TEMPBLOCKS = 1000;
 
+    public const int MAX_HUMAN = 1000;
+
 }
