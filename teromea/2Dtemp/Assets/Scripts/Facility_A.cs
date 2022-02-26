@@ -10,10 +10,9 @@ public class Facility_A : Token
     public float range;
     // ショットの速度
     const float SHOT_SPEED = 5.0f;
-    // 攻撃威力
-    int _power = 10;
     public GameObject shot;
     public float speed;
+    public int interval = 0;
 
     Collider2D enemy;
 
@@ -34,6 +33,7 @@ public class Facility_A : Token
             //探してもいないなら終わる
             if (enemy == null)
             {
+                interval=100;
                 return;
             }
         }
@@ -41,7 +41,7 @@ public class Facility_A : Token
         var dx = this.X - enemy.transform.position.x;
         var dy = this.Y - enemy.transform.position.y;
         // 敵への角度を取得(⑥)
-        float targetAngle = Mathf.Atan2(dy, dx) * Mathf.Rad2Deg;
+        float targetAngle = Mathf.Atan2(dy, dx) * Mathf.Rad2Deg+180;
         // 現在向いている角度との差を求める
         float dAngle = Mathf.DeltaAngle(Angle, targetAngle);
         // 差の0.2だけ回転する
@@ -53,8 +53,13 @@ public class Facility_A : Token
             // 角度が大きい(16度より大きい)場合は撃てない
             return;
         }
-        //矢を生成
-        Instantiate(shot,new Vector3(this.X,this.Y,0),Quaternion.identity);
+        if(interval<=0){
+        //矢を生成(なんか親子関係使った方が綺麗っぽい)
+        Instantiate(shot,new Vector3(this.X,this.Y,0),Quaternion.Euler(0,0,Angle));
+        interval=100;
+        }else{
+            interval=interval-1;
+        }
     }
     //Collider:当たり判定に使う図形
     Collider2D Search()

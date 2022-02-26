@@ -8,20 +8,29 @@ public class Shot : Token
     public static TokenMgr<Shot> parent;
     public GameObject shot;
     public float speed;
+    public int power;
     // ショットを撃つ
     private Rigidbody2D myRigid;
     // Start is called before the first frame update
     void Start()
     {
         myRigid = this.GetComponent<Rigidbody2D>();
-        myRigid.AddForce(new Vector2(speed,0));
+        myRigid.AddForce(transform.right*speed);
     }
     void Update()
     {
         if (IsOutside())
         {
-            // 画面外に出たので消滅
-            Vanish();
+            // 画面外に出たので消滅,逆に言えば画面外では動いてくれない
+            Destroy(this.gameObject);
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D collisionInfo)
+    {
+        if(collisionInfo.gameObject.CompareTag("Enemy")){
+            collisionInfo.gameObject.GetComponent<Enemy>().Hpdown(power);
+            Destroy(this.gameObject);
         }
     }
 

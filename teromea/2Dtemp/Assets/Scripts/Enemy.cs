@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Enemy : Token
 {
+    public int hp;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,5 +15,11 @@ public class Enemy : Token
     void Update()
     {
         
+    }
+    public void Hpdown(int power){
+        hp = hp - power;
+        if(hp<=0){
+            Destroy(this.gameObject);
+        }
     }
 }
