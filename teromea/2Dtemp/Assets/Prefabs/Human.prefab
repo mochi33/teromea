@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1762672722}
   - component: {fileID: 1762672724}
   - component: {fileID: -5757253030094366393}
+  - component: {fileID: 579924330669442521}
   m_Layer: 0
   m_Name: Human
   m_TagString: Untagged
@@ -102,9 +103,8 @@ MonoBehaviour:
   walkspeed: 1
   jumpforce: 300
   direction: 0
-  isOnPosition: 0
+  isMoving: 0
   isJump: 0
-  sideobject: {fileID: 0}
 --- !u!50 &1762672722
 Rigidbody2D:
   serializedVersion: 4
@@ -155,3 +155,20 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &579924330669442521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5410072398942559771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea7f3c59f71ddd6438ac44def9eec8ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectsAround: []
+  range: 1
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 64

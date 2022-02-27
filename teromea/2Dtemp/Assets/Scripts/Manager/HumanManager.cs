@@ -5,8 +5,7 @@ using UnityEngine;
 public class HumanManager : SingletonMonoBehaviour<HumanManager>
 {
 
-    public GameObject[] Human = new GameObject[Model.MAX_HUMAN];
-    public int humanlength;
+    public List<GameObject> humanList = new List<GameObject>();
     public GameObject prefabobj;
     // Start is called before the first frame update
     void Start()
@@ -20,8 +19,15 @@ public class HumanManager : SingletonMonoBehaviour<HumanManager>
         
     }
 
-    public void CleateHuman (Vector3 pos) {
-        if (humanlength < Model.MAX_HUMAN)
-            Human[humanlength - 1] = Instantiate(prefabobj, pos, Quaternion.identity);
+    public void CleateHuman (Vector3 pos) 
+    {
+        if (humanList.Count <= Model.MAX_TEMPBLOCKS)
+            humanList.Add(Instantiate(prefabobj, pos, Quaternion.identity));
+    }
+
+    public void DeleteHuman(GameObject obj)
+    {
+        Destroy(obj);
+        humanList.Remove(obj);
     }
 }

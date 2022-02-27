@@ -7,47 +7,58 @@ public class CharacterMove : MonoBehaviour
 {
 
     private Rigidbody2D rig;
+    private GetObjectsAround getObjectsAround;
     public Vector2 targetposition;
 
     public float walkspeed = 3.0f;
 
     public float jumpforce = 200f;
 
-    public float direction = 0;
+    public int direction = 0;
 
-    public bool isOnPosition = false;
+    public bool isMoving = false;
 
     public bool isJump = false;
-
-    public GameObject sideobject = null;
 
     // Start is called before the first frame update
     void Start()
     {
         rig = GetComponent<Rigidbody2D>();
-        Jump(jumpforce);
+        getObjectsAround = GetComponent<GetObjectsAround>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Vector2.Distance(targetposition, rig.position) < 0.1f)
+
+    }
+
+    public IEnumerator MoveToPosition(Vector2 pos)
+    {
+        Debug.Log("Move start");
+        isMoving = true;
+        StartCoroutine(DecisionJump());
+        while(Vector2.Distance(targetposition, rig.position) > Model.BLOCK_SIZE * 0.2f)
         {
-            isOnPosition = true;
+            if(targetposition.x > rig.position.x)
+            {
+                direction = 1;
+            }
+            else
+            {
+                direction = -1;
+            }
+
+            SetWalk(direction * walkspeed);
+
+            yield return null;
         }
 
-        if (Vector2.Distance(targetposition, rig.position) > 0.1f)
-        {
-            Vector2 position = rig.position;
-            direction = (targetposition.x - position.x) / Mathf.Abs(targetposition.x - position.x);
-            SetWalk(direction * walkspeed);
-            if (sideobject != null && !isJump)
-            {
-                JumpToUpperPlace();
-            }
-        } else {
-            StopWalk();
-        }
+        StopWalk();
+        isMoving = false;
+        direction = 0;
+
+        yield return null;
     }
 
     public void SetWalk(float walkspeed)
@@ -69,33 +80,44 @@ public class CharacterMove : MonoBehaviour
         rig.AddForce(new Vector2(0, jumpforce));
     }
 
-    async void JumpToUpperPlace()
+    public IEnumerator JumpToUpperPlace()
     {
         isJump = true;
         StopWalk();
-        await Task.Delay(1000);
+        yield return new WaitForSeconds(1.0f);
         Jump(jumpforce);
-        sideobject = null;
-        await Task.Delay(500);
+        yield return new WaitForSeconds(0.5f);
         isJump = false;
-
     }
 
-    private void OnCollisionEnter2D(Collision2D other) {
-        GameObject obj = other.gameObject;
-        if (obj.tag == "Block" && obj.transform.position.y + Model.BLOCK_SIZE > rig.position.y && !isOnPosition)
-        {
-            Debug.Log("collision!");
-            sideobject = obj;
-        }
-    }
-
-    private void OnCollisionExit2D(Collision2D other)
+    public IEnumerator DecisionJump()
     {
-        if (other.gameObject == sideobject)
+        LayerMask layerMask = 1 << 6 | 1 << 7;
+        while(isMoving)
         {
-            sideobject = null;
+            Physics2D.OverlapPointAll(new Vector2(rig.position.x + direction * Model.BLOCK_SIZE, rig.position.y), layerMask: layerMask);
+            if(Mathf.Approximately(rig.velocity.y, 0)
+            && Physics2D.OverlapPointAll(new Vector2(rig.position.x + direction * Model.BLOCK_SIZE, rig.position.y), layerMask: layerMask).Length > 0
+            && !isJump)
+            {
+                yield return JumpToUpperPlace();
+            }
+            yield return null;
         }
     }
+
+    // private void OnCollisionEnter2D(Collision2D other) {
+    //     GameObject obj = other.gameObject;
+    //     //obj.transform.position.y + Model.BLOCK_SIZE > rig.position.y
+    //     Debug.Log(obj.transform.position.x - rig.position.x);
+    //     Debug.Log(direction * Model.BLOCK_SIZE);
+    //     if (obj.tag == "Block" 
+    //     && (int)Mathf.Round(obj.transform.position.x - rig.position.x) == (int)Mathf.Round(direction * Model.BLOCK_SIZE) 
+    //     && (int)Mathf.Round(obj.transform.position.y - rig.position.y) == 0
+    //     && isMoving)
+    //     {
+    //         isJump = true;
+    //     }
+    // }
 
 }

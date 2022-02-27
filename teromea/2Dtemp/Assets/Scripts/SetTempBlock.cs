@@ -7,72 +7,57 @@ public class SetTempBlock : SingletonMonoBehaviour<TempBlockManager>
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButton(0))
+        if(Input.GetMouseButton(0))
         {
-            //すでにブロックが存在していないかチェック
-            bool isputable = true;
-            Collider2D[] pointcol = Physics2D.OverlapPointAll(MousePointer.Instance.transform.position); 
-            foreach(Collider2D col in pointcol)
+            for(int i = 0; i < MousePointer.Instance.blocklength; i++)
             {
-                if (col.gameObject.CompareTag("Block"))
+                Debug.Log("putable");
+                float x = MousePointer.Instance.transform.position.x;
+                float y = MousePointer.Instance.transform.position.y;
+                float objx = MousePointer.Instance.nearBlock[i].transform.position.x;
+                float objy = MousePointer.Instance.nearBlock[i].transform.position.y;
+                bool ablex = false;
+                bool abley = false;
+
+                if(Mathf.Abs(objx - x) < Model.BLOCK_SIZE * 1.5f && Mathf.Abs(objx - x) > Model.BLOCK_SIZE * 0.5f) 
                 {
-                    isputable = false;
-                    Debug.Log("false");
+                    ablex = true;
                 }
-            }
-            //ここまで
 
-
-            if (isputable)
-            {
-                for (int i = 0; i < MousePointer.Instance.blocklength; i++)
+                if(Mathf.Abs(objy - y) < Model.BLOCK_SIZE * 1.5f && Mathf.Abs(objy - y) > Model.BLOCK_SIZE * 0.5f) 
                 {
-                    Debug.Log("putable");
-                    float x = MousePointer.Instance.transform.position.x;
-                    float y = MousePointer.Instance.transform.position.y;
-                    float objx = MousePointer.Instance.nearBlock[i].transform.position.x;
-                    float objy = MousePointer.Instance.nearBlock[i].transform.position.y;
-                    bool ablex = false;
-                    bool abley = false;
+                    abley = true;
+                }
 
-                    if (Mathf.Abs(objx - x) < Model.BLOCK_SIZE * 1.5f && Mathf.Abs(objx - x) > Model.BLOCK_SIZE * 0.5f) 
+                if(!(ablex && abley))
+                {
+                    if (ablex)
                     {
-                        ablex = true;
-                    }
-
-                    if (Mathf.Abs(objy - y) < Model.BLOCK_SIZE * 1.5f && Mathf.Abs(objy - y) > Model.BLOCK_SIZE * 0.5f) 
-                    {
-                        abley = true;
-                    }
-
-                    if(!(ablex && abley))
-                    {
-                        if (ablex)
+                       if(x > objx)
                         {
-                            if (x > objx)
-                            {
-                                TempBlockManager.Instance.CleateTempBlock(new Vector3(objx + Model.BLOCK_SIZE, objy, 0));
-                            } else {
-                                TempBlockManager.Instance.CleateTempBlock(new Vector3(objx - Model.BLOCK_SIZE, objy, 0));
-                            }
-
+                            TempBlockManager.Instance.CleateTempBlock(new Vector3(objx + Model.BLOCK_SIZE, objy, 0));
+                        } 
+                        else 
+                        {
+                            TempBlockManager.Instance.CleateTempBlock(new Vector3(objx - Model.BLOCK_SIZE, objy, 0));
+                        }
                             break;
                         }
 
-                        if (abley)
+                        if(abley)
                         {
-                            if (y > objy)
+                            if(y > objy)
                             {
                                 TempBlockManager.Instance.CleateTempBlock(new Vector3(objx, objy + Model.BLOCK_SIZE, 0));
-                            } else {
+                            } 
+                            else 
+                            {
                                 TempBlockManager.Instance.CleateTempBlock(new Vector3(objx, objy - Model.BLOCK_SIZE, 0));
                             }
-
                             break;
                         }
                     }
                 }
-            }
         }
         
     }

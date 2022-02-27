@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MousePointer : SingletonMonoBehaviour<MousePointer>
 {
-    public GameObject[] nearBlock = new GameObject[9];
+    public GameObject[] nearBlock = new GameObject[18];
     public int blocklength = 0;
 
     // Start is called before the first frame update
@@ -24,7 +24,9 @@ public class MousePointer : SingletonMonoBehaviour<MousePointer>
     }
 
     private void searchNearObjects () {
-        Collider2D[] cols = Physics2D.OverlapCircleAll(transform.position, Model.BLOCK_SIZE, LayerMask.GetMask("Block"));
+        //レイヤーの指定https://www.ame-name.com/archives/5621
+        LayerMask layerMask = 1 << 6 | 1 << 7;
+        Collider2D[] cols = Physics2D.OverlapCircleAll(transform.position, Model.BLOCK_SIZE, layerMask);
         blocklength = cols.Length;
         for (int i = 0; i < cols.Length; i++)
         {

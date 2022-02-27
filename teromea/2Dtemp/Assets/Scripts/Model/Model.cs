@@ -10,4 +10,10 @@ public class Model
 
     public const int MAX_HUMAN = 1000;
 
+    public const int MAX_INSTRACTION = 1000;
+
+    public const float MAX_INSTRACTION_RANGE = 1000f;
+
+    public const int MAX_ONINSTRACTION = 1000;
+
 }
