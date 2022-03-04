@@ -19,22 +19,46 @@ public class TempBlockManager : SingletonMonoBehaviour<TempBlockManager>
         
     }
 
+    ///<Summary>
+    ///TempBlockを作成するときは必ずこのメソッドを使って欲しい。
+    ///<Summary>
     public bool CleateTempBlock (Vector3 pos) 
     {
         if(!PhysicsFunc.isThereAnyObjectOnThePoint(1 << 6 | 1 << 7))
         {
-            tempblocks.Add(Instantiate(prefabobj, pos, Quaternion.identity));
+            GameObject tempBlock = Instantiate(prefabobj, pos, Quaternion.identity);
+            tempblocks.Add(tempBlock);
+            SetSetBlockInstraction(tempBlock);
             return true;
         } 
         else 
         {
             return false;
         }
+
+        void SetSetBlockInstraction(GameObject tempBlock)
+        {
+            InstractionManager.Instance.CleateInstraction(InstractionType.set, tempBlock);
+        }
     }
 
+    ///<Summary>
+    ///TempBlockを削除するときは必ずこのメソッドを使って欲しい。
+    ///<Summary>
     public bool DeleteTempBlock(GameObject obj)
     {
+        DeleteSetBlockInstraction(obj);
+        bool isSuccess = tempblocks.Remove(obj);
         Destroy(obj);
-        return tempblocks.Remove(obj);
+        return isSuccess;
+
+        void DeleteSetBlockInstraction(GameObject tempBlock)
+        {
+            List<Instraction> instractions = InstractionManager.Instance.SearchInstraction(InstractionType.set, tempBlock);
+            foreach(Instraction instraction in instractions)
+            {
+                InstractionManager.Instance.DeleteInstraction(instraction);
+            }
+        }
     }
 }

@@ -6,9 +6,10 @@ public class Human : MonoBehaviour
 {    
     public CharacterMove charmove;
 
-    public Instraction myInstraction;
+    public Instraction myInstraction = new Instraction(InstractionType.noInstraction, null);
 
     private bool isInstractionChanged = false;
+    private Coroutine currentCouroutine = null;
 
     // Start is called before the first frame update
 
@@ -28,8 +29,11 @@ public class Human : MonoBehaviour
     public void ReceiveInstraction(Instraction instraction)
     {
         Debug.Log("Receive Instraction");
+        instraction.state = InstractionState.inProcess;
+        instraction.executer = this;
         myInstraction = instraction;
         isInstractionChanged = true;
+        
     }
 
     public IEnumerator ExecuteInstraction()
@@ -38,22 +42,24 @@ public class Human : MonoBehaviour
         {
             if(isInstractionChanged)
             {
+                StopActionCoroutines();
+                isInstractionChanged = false;
                 switch (myInstraction.type)
                 {
                     case InstractionType.move:
-                    StartCoroutine(MoveToTarget(myInstraction));
+                    currentCouroutine = StartCoroutine(MoveToTarget(myInstraction));
                     break;
 
                     case InstractionType.attack:
-                    StartCoroutine(Attack(myInstraction));
+                    currentCouroutine = StartCoroutine(Attack(myInstraction));
                     break;
 
                     case InstractionType.dig:
-                    StartCoroutine(Dig(myInstraction));
+                    currentCouroutine = StartCoroutine(Dig(myInstraction));
                     break;
 
                     case InstractionType.set:
-                    StartCoroutine(SetBlock(myInstraction));
+                    currentCouroutine = StartCoroutine(SetBlock(myInstraction));
                     break;
 
                     default:
@@ -64,25 +70,54 @@ public class Human : MonoBehaviour
         }
     }
 
+    public void StopActionCoroutines()
+    {
+        charmove.StopAllCoroutines();
+        if(currentCouroutine != null)
+        {
+            StopCoroutine(currentCouroutine);
+        }
+    }
+
     public IEnumerator MoveToTarget(Instraction instraction)
     {
-        StartCoroutine(charmove.MoveToPosition(instraction.target.transform.position));
-        yield return null;
+        yield return StartCoroutine(charmove.MoveToPosition(instraction.target.transform.position));
+        InstractionManager.Instance.DeleteInstraction(instraction);
+        yield break;
     }
 
     public IEnumerator Attack(Instraction instraction)
     {
-        yield return null;
+        InstractionManager.Instance.DeleteInstraction(instraction);
+        yield break;
     }
 
     public IEnumerator SetBlock(Instraction instraction)
     {
-        yield return null;
+        yield return StartCoroutine(charmove.MoveToTarget(instraction.target));
+        do {
+        yield return new WaitForSeconds(1.0f);
+        } while(!ConvertTempBlockIntoBlock(instraction.target));
+
+        yield break;
+
+        bool ConvertTempBlockIntoBlock(GameObject tempBlock)
+        {
+            if(tempBlock.GetComponent<TempBlock>()?.ConvertThisIntoBlock() == true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 
     public IEnumerator Dig(Instraction instraction)
     {
-        yield return null;
+        InstractionManager.Instance.DeleteInstraction(instraction);
+        yield break;
     }
 
 }

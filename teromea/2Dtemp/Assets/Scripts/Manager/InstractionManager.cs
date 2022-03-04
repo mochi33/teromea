@@ -8,6 +8,7 @@ public enum InstractionType
     dig,
     set,
     attack,
+    noInstraction
 
 }
 
@@ -19,18 +20,21 @@ public enum InstractionState
     cancel,
 }
 
-public struct Instraction
+public class Instraction
 {
     public InstractionType type;
     public GameObject target;
 
     public InstractionState state;
 
+    public Human executer;
+
     public Instraction(InstractionType type, GameObject target)
     {
         this.type = type;
         this.target = target;
         this.state = InstractionState.waiting;
+        this.executer = null;
     }
 
 }
@@ -49,6 +53,55 @@ public class InstractionManager : SingletonMonoBehaviour<InstractionManager>
     void Update()
     {
         
+    }
+
+    public Instraction CleateInstraction(InstractionType type, GameObject target)
+    {
+        Instraction instraction = new Instraction(type, target);
+        AddInstraction(instraction);
+        return instraction;
+    }
+
+    public void DeleteInstraction(Instraction instraction)
+    {
+        if(instraction.state == InstractionState.inProcess)
+        {
+            //空の命令を送信
+            instraction.executer.ReceiveInstraction(CleateInstraction(InstractionType.noInstraction, null));
+        }
+        RemoveInstraction(instraction);
+    }
+
+    public List<Instraction> SearchInstraction(InstractionType type = InstractionType.noInstraction, GameObject target = null)
+    {
+        List<Instraction> searchList = new List<Instraction>(instractionList);
+        List<Instraction> searchedList = new List<Instraction>();
+
+        if(type != InstractionType.noInstraction)
+        {
+            foreach(Instraction instraction in searchList)
+            {
+                if(instraction.type == type)
+                {
+                    searchedList.Add(instraction);
+                }
+            }
+            searchList = new List<Instraction>(searchedList);
+        }
+
+        if(target != null)
+        {
+            searchedList.Clear();
+            foreach(Instraction instraction in searchList)
+            {
+                if(instraction.target == target)
+                {
+                    searchedList.Add(instraction);
+                }
+            }
+        }
+
+        return searchedList;
     }
 
     public void AddInstraction(Instraction instraction)

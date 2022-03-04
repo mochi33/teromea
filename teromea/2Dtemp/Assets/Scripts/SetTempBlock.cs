@@ -11,7 +11,6 @@ public class SetTempBlock : SingletonMonoBehaviour<TempBlockManager>
         {
             for(int i = 0; i < MousePointer.Instance.blocklength; i++)
             {
-                Debug.Log("putable");
                 float x = MousePointer.Instance.transform.position.x;
                 float y = MousePointer.Instance.transform.position.y;
                 float objx = MousePointer.Instance.nearBlock[i].transform.position.x;

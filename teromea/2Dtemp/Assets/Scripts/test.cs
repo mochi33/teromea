@@ -5,16 +5,23 @@ using UnityEngine;
 public class test : MonoBehaviour
 {
     // Start is called before the first frame update
-    public GameObject testObj;
     void Start()
     {
-        InstractionManager.Instance.AddInstraction(new Instraction(InstractionType.move, testObj));
-        SetInstraction.Instance.AssignInstraction();
+        StartCoroutine(AssignInstraction());
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    IEnumerator AssignInstraction()
+    {
+        while(true)
+        {
+            SetInstraction.Instance.AssignInstraction();
+            yield return new WaitForSeconds(2.0f);
+        }
     }
 }

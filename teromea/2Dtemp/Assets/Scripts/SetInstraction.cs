@@ -26,25 +26,31 @@ public class SetInstraction : SingletonMonoBehaviour<SetInstraction>
         Debug.Log("StartAssignInstraction");
         foreach(Instraction instraction in instractionManager.instractionList)
         {
-            float minDistance = Model.MAX_INSTRACTION_RANGE;
-            GameObject minHuman = new GameObject();
-            foreach(GameObject human in humanManager.humanList)
+            if(instraction.state == InstractionState.waiting)
             {
-                float distance = Vector2.Distance(human.transform.position, instraction.target.transform.position);
-                if (distance < minDistance)
+                float minDistance = Model.MAX_INSTRACTION_RANGE;
+                Human minHuman = null;
+                foreach(Human human in humanManager.humanList)
                 {
-                    minHuman = human;
+                    //if(human.myInstraction?.type == InstractionType.noInstraction)
+                    //{
+                        float distance = Vector2.Distance(human.gameObject.transform.position, instraction.target.transform.position);
+                        if (distance < minDistance)
+                        {
+                            minDistance = distance;
+                            minHuman = human;
+                        }
+                    //}
                 }
+                SetInstractionToHuman(instraction, minHuman);
             }
-            Debug.Log("A");
-            SetInstractionToHuman(instraction, minHuman);
         }
     }
 
-    public void SetInstractionToHuman(Instraction instraction, GameObject human)
+    public void SetInstractionToHuman(Instraction instraction, Human human)
     {
-        instraction.state = InstractionState.inProcess;
-        human.GetComponent<Human>()?.ReceiveInstraction(instraction);
+        Debug.Log("SetInstractiion");
+        human?.ReceiveInstraction(instraction);
     }
 
 }

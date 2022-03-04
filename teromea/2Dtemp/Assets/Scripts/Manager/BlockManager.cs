@@ -9,11 +9,12 @@ public enum BlockType
     stone,
 
 }
-public class BlockManager : SingletonMonoBehaviour<TempBlockManager>
+public class BlockManager : SingletonMonoBehaviour<BlockManager>
 {
 
     public List<GameObject> blocks = new List<GameObject>();
-    public GameObject prefabobj;
+    public GameObject prefabDirt;
+    public GameObject prefabStone;
     // Start is called before the first frame update
     void Start()
     {
@@ -28,9 +29,22 @@ public class BlockManager : SingletonMonoBehaviour<TempBlockManager>
 
     public bool CleateBlock (Vector3 pos, BlockType blockType) 
     {
-        if(!PhysicsFunc.isThereAnyObjectOnThePoint(1 << 6 | 1 << 7))
+        if(!PhysicsFunc.isThereAnyObjectOnThePoint(1 << 6))
         {
-            blocks.Add(Instantiate(prefabobj, pos, Quaternion.identity));
+            switch(blockType)
+            {
+                case BlockType.dirt:
+                blocks.Add(Instantiate(prefabDirt, pos, Quaternion.identity));
+                break;
+
+                case BlockType.stone:
+                blocks.Add(Instantiate(prefabStone, pos, Quaternion.identity));
+                break;
+
+                default:
+                return false;
+
+            }
             return true;
         } 
         else 

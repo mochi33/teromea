@@ -16,8 +16,6 @@ public class CharacterMove : MonoBehaviour
 
     public int direction = 0;
 
-    public bool isMoving = false;
-
     public bool isJump = false;
 
     // Start is called before the first frame update
@@ -33,11 +31,36 @@ public class CharacterMove : MonoBehaviour
 
     }
 
+    public IEnumerator MoveToTarget(GameObject target)
+    {
+        Debug.Log("Move start");
+        Coroutine coroutine = StartCoroutine(DecisionJump());
+        while(!getObjectsAround.objectsAround.Contains(target))
+        {
+            if(target.transform.position.x > rig.position.x)
+            {
+                direction = 1;
+            }
+            else
+            {
+                direction = -1;
+            }
+
+            SetWalk(direction * walkspeed);
+
+            yield return null;
+        }
+        direction = 0;
+        StopCoroutine(coroutine);
+        StopWalk();
+        yield break;
+
+    }
+
     public IEnumerator MoveToPosition(Vector2 pos)
     {
         Debug.Log("Move start");
-        isMoving = true;
-        StartCoroutine(DecisionJump());
+        Coroutine coroutine = StartCoroutine(DecisionJump());
         while(Vector2.Distance(targetposition, rig.position) > Model.BLOCK_SIZE * 0.2f)
         {
             if(targetposition.x > rig.position.x)
@@ -54,11 +77,10 @@ public class CharacterMove : MonoBehaviour
             yield return null;
         }
 
-        StopWalk();
-        isMoving = false;
         direction = 0;
-
-        yield return null;
+        StopCoroutine(coroutine);
+        StopWalk();
+        yield break;
     }
 
     public void SetWalk(float walkspeed)
@@ -92,13 +114,13 @@ public class CharacterMove : MonoBehaviour
 
     public IEnumerator DecisionJump()
     {
-        LayerMask layerMask = 1 << 6 | 1 << 7;
-        while(isMoving)
+        isJump = false;
+        LayerMask layerMask = 1 << 6;
+        while(true)
         {
-            Physics2D.OverlapPointAll(new Vector2(rig.position.x + direction * Model.BLOCK_SIZE, rig.position.y), layerMask: layerMask);
-            if(Mathf.Approximately(rig.velocity.y, 0)
+            if(!isJump
             && Physics2D.OverlapPointAll(new Vector2(rig.position.x + direction * Model.BLOCK_SIZE, rig.position.y), layerMask: layerMask).Length > 0
-            && !isJump)
+            && Mathf.Approximately(rig.velocity.y, 0))
             {
                 yield return JumpToUpperPlace();
             }

@@ -171,4 +171,4 @@ MonoBehaviour:
   range: 1
   layerMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 4294967295
