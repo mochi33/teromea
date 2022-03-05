@@ -112,7 +112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetposition: {x: 4, y: 0}
-  walkspeed: 3
+  walkspeed: 1
   jumpforce: 200
   direction: 0
   isOnPosition: 0
