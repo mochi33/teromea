@@ -32,15 +32,15 @@ public class SetInstraction : SingletonMonoBehaviour<SetInstraction>
                 Human minHuman = null;
                 foreach(Human human in humanManager.humanList)
                 {
-                    //if(human.myInstraction?.type == InstractionType.noInstraction)
-                    //{
+                    if(human.myInstraction?.type == InstractionType.noInstraction)
+                    {
                         float distance = Vector2.Distance(human.gameObject.transform.position, instraction.target.transform.position);
                         if (distance < minDistance)
                         {
                             minDistance = distance;
                             minHuman = human;
                         }
-                    //}
+                    }
                 }
                 SetInstractionToHuman(instraction, minHuman);
             }

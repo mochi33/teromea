@@ -29,6 +29,7 @@ public class Human : MonoBehaviour
     public void ReceiveInstraction(Instraction instraction)
     {
         Debug.Log("Receive Instraction");
+        StopActionCoroutines();
         instraction.state = InstractionState.inProcess;
         instraction.executer = this;
         myInstraction = instraction;
@@ -42,7 +43,6 @@ public class Human : MonoBehaviour
         {
             if(isInstractionChanged)
             {
-                StopActionCoroutines();
                 isInstractionChanged = false;
                 switch (myInstraction.type)
                 {
@@ -73,22 +73,29 @@ public class Human : MonoBehaviour
     public void StopActionCoroutines()
     {
         charmove.StopAllCoroutines();
+        charmove.StopWalk();
         if(currentCouroutine != null)
         {
             StopCoroutine(currentCouroutine);
         }
     }
 
+    public void FinishInstraction(Instraction instraction)
+    {
+        instraction.state = InstractionState.finished;
+        StopActionCoroutines();
+    }
+
     public IEnumerator MoveToTarget(Instraction instraction)
     {
         yield return StartCoroutine(charmove.MoveToPosition(instraction.target.transform.position));
-        InstractionManager.Instance.DeleteInstraction(instraction);
+        FinishInstraction(instraction);
         yield break;
     }
 
     public IEnumerator Attack(Instraction instraction)
     {
-        InstractionManager.Instance.DeleteInstraction(instraction);
+        FinishInstraction(instraction);
         yield break;
     }
 
@@ -98,7 +105,7 @@ public class Human : MonoBehaviour
         do {
         yield return new WaitForSeconds(1.0f);
         } while(!ConvertTempBlockIntoBlock(instraction.target));
-
+        FinishInstraction(instraction);
         yield break;
 
         bool ConvertTempBlockIntoBlock(GameObject tempBlock)
@@ -116,8 +123,19 @@ public class Human : MonoBehaviour
 
     public IEnumerator Dig(Instraction instraction)
     {
-        InstractionManager.Instance.DeleteInstraction(instraction);
+        FinishInstraction(instraction);
         yield break;
+    }
+
+    void OnCollisionEnter(Collision col)
+    {
+        GameObject obj = col.gameObject;
+        if(obj.tag == "tag")
+        {
+            Vector3 pos = obj.transform.position;
+            obj.transform.position = gameObject.transform.position;
+            gameObject.transform.position = pos;
+        }
     }
 
 }

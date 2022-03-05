@@ -57,7 +57,7 @@ public class TempBlockManager : SingletonMonoBehaviour<TempBlockManager>
             List<Instraction> instractions = InstractionManager.Instance.SearchInstraction(InstractionType.set, tempBlock);
             foreach(Instraction instraction in instractions)
             {
-                InstractionManager.Instance.DeleteInstraction(instraction);
+                instraction.state = InstractionState.finished;
             }
         }
     }

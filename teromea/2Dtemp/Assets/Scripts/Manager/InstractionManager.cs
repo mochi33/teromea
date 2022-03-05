@@ -2,42 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum InstractionType
-{
-    move,
-    dig,
-    set,
-    attack,
-    noInstraction
 
-}
-
-public enum InstractionState
-{
-    waiting,
-    inProcess,
-    finished,
-    cancel,
-}
-
-public class Instraction
-{
-    public InstractionType type;
-    public GameObject target;
-
-    public InstractionState state;
-
-    public Human executer;
-
-    public Instraction(InstractionType type, GameObject target)
-    {
-        this.type = type;
-        this.target = target;
-        this.state = InstractionState.waiting;
-        this.executer = null;
-    }
-
-}
 public class InstractionManager : SingletonMonoBehaviour<InstractionManager>
 {
 
@@ -52,7 +17,18 @@ public class InstractionManager : SingletonMonoBehaviour<InstractionManager>
     // Update is called once per frame
     void Update()
     {
-        
+        List<Instraction> tempList = new List<Instraction>(instractionList);
+        foreach(Instraction instraction in tempList)
+        {
+            if(instraction.state == InstractionState.finished)
+            {
+                DeleteInstraction(instraction);
+            }
+            else if(instraction.state == InstractionState.cancel)
+            {
+                DeleteInstraction(instraction);
+            }
+        }
     }
 
     public Instraction CleateInstraction(InstractionType type, GameObject target)
@@ -62,13 +38,10 @@ public class InstractionManager : SingletonMonoBehaviour<InstractionManager>
         return instraction;
     }
 
-    public void DeleteInstraction(Instraction instraction)
+    private void DeleteInstraction(Instraction instraction)
     {
-        if(instraction.state == InstractionState.inProcess)
-        {
-            //空の命令を送信
-            instraction.executer.ReceiveInstraction(CleateInstraction(InstractionType.noInstraction, null));
-        }
+        //空の命令を送信
+        instraction.executer?.ReceiveInstraction(CleateInstraction(InstractionType.noInstraction, null));       
         RemoveInstraction(instraction);
     }
 
@@ -117,4 +90,41 @@ public class InstractionManager : SingletonMonoBehaviour<InstractionManager>
         instractionList.Remove(instraction);
     }
 
+}
+
+public class Instraction
+{
+    public InstractionType type;
+    public GameObject target;
+
+    public InstractionState state;
+
+    public Human executer;
+
+    public Instraction(InstractionType type, GameObject target)
+    {
+        this.type = type;
+        this.target = target;
+        this.state = InstractionState.waiting;
+        this.executer = null;
+    }
+
+}
+
+public enum InstractionType
+{
+    move,
+    dig,
+    set,
+    attack,
+    noInstraction
+
+}
+
+public enum InstractionState
+{
+    waiting,
+    inProcess,
+    finished,
+    cancel,
 }
