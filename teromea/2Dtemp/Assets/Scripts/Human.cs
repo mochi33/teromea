@@ -102,9 +102,11 @@ public class Human : MonoBehaviour
     public IEnumerator SetBlock(Instraction instraction)
     {
         yield return StartCoroutine(charmove.MoveToTarget(instraction.target));
-        do {
-        yield return new WaitForSeconds(1.0f);
-        } while(!ConvertTempBlockIntoBlock(instraction.target));
+        do
+        {
+            yield return new WaitForSeconds(1.0f);
+        } 
+        while(!ConvertTempBlockIntoBlock(instraction.target));
         FinishInstraction(instraction);
         yield break;
 
@@ -123,19 +125,16 @@ public class Human : MonoBehaviour
 
     public IEnumerator Dig(Instraction instraction)
     {
+        Block block = instraction.target.GetComponent<Block>();
+        yield return StartCoroutine(charmove.MoveToTarget(instraction.target));
+        do
+        {
+            yield return new WaitForSeconds(1.0f);
+            block.hp -= 5.0f;
+        } 
+        while(block.hp > 0f);
         FinishInstraction(instraction);
         yield break;
-    }
-
-    void OnCollisionEnter(Collision col)
-    {
-        GameObject obj = col.gameObject;
-        if(obj.tag == "tag")
-        {
-            Vector3 pos = obj.transform.position;
-            obj.transform.position = gameObject.transform.position;
-            gameObject.transform.position = pos;
-        }
     }
 
 }

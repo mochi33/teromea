@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class InstractionManager : SingletonMonoBehaviour<InstractionManager>
 {
 
     public List<Instraction> instractionList = new List<Instraction>();
+    public int instractionCount;
+    public int instractionTrueCount;
 
     // Start is called before the first frame update
     void Start()
@@ -17,6 +18,7 @@ public class InstractionManager : SingletonMonoBehaviour<InstractionManager>
     // Update is called once per frame
     void Update()
     {
+        instractionCount = instractionList.Count;
         List<Instraction> tempList = new List<Instraction>(instractionList);
         foreach(Instraction instraction in tempList)
         {
@@ -26,7 +28,7 @@ public class InstractionManager : SingletonMonoBehaviour<InstractionManager>
             }
             else if(instraction.state == InstractionState.cancel)
             {
-                DeleteInstraction(instraction);
+                CancelInstraction(instraction);
             }
         }
     }
@@ -40,9 +42,32 @@ public class InstractionManager : SingletonMonoBehaviour<InstractionManager>
 
     private void DeleteInstraction(Instraction instraction)
     {
-        //空の命令を送信
-        instraction.executer?.ReceiveInstraction(CleateInstraction(InstractionType.noInstraction, null));       
+        
+        if(instraction.nextInstraction == null)
+        {
+            //空の命令を送信
+            instraction.executer?.ReceiveInstraction(new Instraction(InstractionType.noInstraction, null)); 
+        } 
+        else
+        {
+            instraction.executer?.ReceiveInstraction(instraction.nextInstraction); 
+        }    
         RemoveInstraction(instraction);
+    }
+
+    private void CancelInstraction(Instraction instraction)
+    {
+        instraction.state = InstractionState.waiting;
+        if(instraction.nextInstraction == null)
+        {
+            //空の命令を送信
+            instraction.executer?.ReceiveInstraction(new Instraction(InstractionType.noInstraction, null)); 
+        } 
+        else
+        {
+            instraction.executer?.ReceiveInstraction(instraction.nextInstraction); 
+        }    
+        instraction.executer = null;
     }
 
     public List<Instraction> SearchInstraction(InstractionType type = InstractionType.noInstraction, GameObject target = null)
@@ -101,12 +126,15 @@ public class Instraction
 
     public Human executer;
 
+    public Instraction nextInstraction;
+
     public Instraction(InstractionType type, GameObject target)
     {
         this.type = type;
         this.target = target;
         this.state = InstractionState.waiting;
         this.executer = null;
+        nextInstraction = null;
     }
 
 }
