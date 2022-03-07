@@ -70,6 +70,7 @@ public class InstractionManager : SingletonMonoBehaviour<InstractionManager>
             instraction.executer?.ReceiveInstraction(instraction.nextInstraction); 
         }    
         instraction.executer = null;
+        instraction.nextInstraction = null;
     }
 
     public List<Instraction> SearchInstraction(InstractionType type = InstractionType.noInstraction, GameObject target = null)
@@ -136,7 +137,7 @@ public class Instraction
         this.target = target;
         this.state = InstractionState.waiting;
         this.executer = null;
-        nextInstraction = null;
+        this.nextInstraction = null;
     }
 
 }

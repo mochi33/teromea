@@ -26,14 +26,16 @@ public class SetInstraction : SingletonMonoBehaviour<SetInstraction>
         Debug.Log("StartAssignInstraction");
         foreach(Instraction instraction in instractionManager.instractionList)
         {
-            if(instraction.state == InstractionState.waiting || instraction.type != InstractionType.noInstraction)
+            if(instraction.state == InstractionState.waiting && !(instraction.type == InstractionType.noInstraction || instraction.type == InstractionType.move))
             {
+                //上のifが機能していない
                 float minDistance = Model.MAX_INSTRACTION_RANGE;
                 Human minHuman = null;
                 foreach(Human human in humanManager.humanList)
                 {
                     if(human.myInstraction?.type == InstractionType.noInstraction)
                     {
+                        //上のifが機能していない
                         float distance = Vector2.Distance(human.gameObject.transform.position, instraction.target.transform.position);
                         if (distance < minDistance)
                         {
@@ -60,10 +62,8 @@ public class SetInstraction : SingletonMonoBehaviour<SetInstraction>
         Instraction currentInstraction;
         if((currentInstraction = human?.myInstraction) != null)
         {
-            Debug.Log(1);
             if(currentInstraction.nextInstraction == null)
             {
-                Debug.Log(2);
                 currentInstraction.nextInstraction = instraction;
                 currentInstraction.state = InstractionState.finished;
             }
@@ -84,7 +84,7 @@ public class SetInstraction : SingletonMonoBehaviour<SetInstraction>
             if(currentInstraction.nextInstraction == null)
             {
                 currentInstraction.nextInstraction = instraction;
-                if(currentInstraction.type != InstractionType.noInstraction)
+                if(currentInstraction.type == InstractionType.noInstraction)
                 {
                     currentInstraction.state = InstractionState.cancel;
                 }
