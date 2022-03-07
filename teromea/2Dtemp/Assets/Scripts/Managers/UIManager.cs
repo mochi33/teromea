@@ -5,7 +5,9 @@ using UnityEngine;
 public enum Manipulation
 {
     setBlock,
-    dig,
+    assignDigBlock,
+
+    noManipulation,
 }
 
 public class UIManager : SingletonMonoBehaviour<UIManager>
@@ -13,7 +15,7 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
 
     public GameObject selectDirtButtom;
     public GameObject selectStoneButtom;
-    public Manipulation selectedManipulation = Manipulation.setBlock;
+    public Manipulation selectedManipulation = Manipulation.noManipulation;
     public BlockType selectedBlockType = BlockType.dirt;
     // Start is called before the first frame update
     void Start()
@@ -45,16 +47,18 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
 
     public void SelectDirtBlock()
     {
+        selectedManipulation = Manipulation.setBlock;
         selectedBlockType = BlockType.dirt;
     }
 
     public void SelectStoneBlock()
     {
+        selectedManipulation = Manipulation.setBlock;
         selectedBlockType = BlockType.stone;
     }
 
     public void SelectDig()
     {
-        selectedManipulation = Manipulation.dig;
+        selectedManipulation = Manipulation.assignDigBlock;
     }
 }

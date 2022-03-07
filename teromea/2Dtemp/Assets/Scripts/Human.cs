@@ -6,10 +6,17 @@ public class Human : MonoBehaviour
 {    
     public CharacterMove charmove;
 
-    public Instraction myInstraction = new Instraction(InstractionType.noInstraction, null);
+    public Instraction myInstraction;
+    public string inst;
+    public Material standardMaterial;
 
+    public Material outLineMaterial;
     private bool isInstractionChanged = false;
     private Coroutine currentCouroutine = null;
+
+    private SpriteRenderer spriteRenderer;
+
+    public bool isSelected = false;
 
     // Start is called before the first frame update
 
@@ -17,12 +24,23 @@ public class Human : MonoBehaviour
     {
         transform.parent = GameObject.Find ("HumanManager").transform;
         charmove = GetComponent<CharacterMove>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        InitInstraction();
         StartCoroutine(ExecuteInstraction());
     }
 
     // Update is called once per frame
     void Update()
     {
+        inst = myInstraction.type.ToString();
+        if(isSelected)
+        {
+            spriteRenderer.material = outLineMaterial;
+        }
+        else
+        {
+            spriteRenderer.material = standardMaterial;
+        }
         
     }
 
@@ -37,6 +55,11 @@ public class Human : MonoBehaviour
         
     }
 
+    private void InitInstraction()
+    {
+        ReceiveInstraction(InstractionManager.Instance.CleateInstraction(InstractionType.noInstraction, null));    
+    }
+
     public IEnumerator ExecuteInstraction()
     {
         while(true)
@@ -47,7 +70,7 @@ public class Human : MonoBehaviour
                 switch (myInstraction.type)
                 {
                     case InstractionType.move:
-                    currentCouroutine = StartCoroutine(MoveToTarget(myInstraction));
+                    currentCouroutine = StartCoroutine(MoveToPosition(myInstraction));
                     break;
 
                     case InstractionType.attack:
@@ -60,6 +83,9 @@ public class Human : MonoBehaviour
 
                     case InstractionType.set:
                     currentCouroutine = StartCoroutine(SetBlock(myInstraction));
+                    break;
+
+                    case InstractionType.noInstraction:
                     break;
 
                     default:
@@ -82,14 +108,18 @@ public class Human : MonoBehaviour
 
     public void FinishInstraction(Instraction instraction)
     {
-        instraction.state = InstractionState.finished;
+        if(instraction != null)
+        {
+            instraction.state = InstractionState.finished;
+        }
         StopActionCoroutines();
     }
 
-    public IEnumerator MoveToTarget(Instraction instraction)
+    public IEnumerator MoveToPosition(Instraction instraction)
     {
-        yield return StartCoroutine(charmove.MoveToPosition(instraction.target.transform.position));
+        yield return StartCoroutine(charmove.MoveToPosition(instraction.target?.transform.position));
         FinishInstraction(instraction);
+        SetMovePoint.Instance.DeleteMoveTarget(instraction.target);
         yield break;
     }
 
@@ -107,6 +137,7 @@ public class Human : MonoBehaviour
             yield return new WaitForSeconds(1.0f);
         } 
         while(!ConvertTempBlockIntoBlock(instraction.target));
+        //たぶんキャラ移動コルーチンが動いてるときに対象がDestroyされてるせいで参照エラーがおきてる
         FinishInstraction(instraction);
         yield break;
 

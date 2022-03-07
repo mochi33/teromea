@@ -29,7 +29,7 @@ public class BlockManager : SingletonMonoBehaviour<BlockManager>
 
     public bool CleateBlock (Vector3 pos, BlockType blockType) 
     {
-        if(!PhysicsFunc.isThereAnyObjectOnThePoint(1 << 6))
+        if(!PhysicsFunc.isThereAnyObjectOnThePoint(pos, Model.BLOCK_LAYER))
         {
             switch(blockType)
             {

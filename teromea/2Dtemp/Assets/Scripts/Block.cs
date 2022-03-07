@@ -8,11 +8,14 @@ public class Block : MonoBehaviour
     public BlockType type;
     public float hp;
     public bool isDig = false;
+    public bool isSelected = false;
+    public SpriteRenderer spriteRenderer;
 
     // Start is called before the first frame update
     void Start()
     {
         transform.parent = GameObject.Find ("BlockManager").transform;
+        spriteRenderer = GetComponent<SpriteRenderer>();
         switch(gameObject.name)
         {
             case "Dirt":
@@ -37,6 +40,15 @@ public class Block : MonoBehaviour
         if(hp < 0f)
         {
             BlockManager.Instance.DeleteBlock(gameObject);
+        }
+
+        if(isDig)
+        {
+            spriteRenderer.color = new Color32(140, 255, 140, 255);
+        }
+        else
+        {
+            spriteRenderer.color = new Color32(255, 255, 255, 255);
         }
     }
 

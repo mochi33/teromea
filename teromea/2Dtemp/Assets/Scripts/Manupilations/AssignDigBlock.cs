@@ -13,7 +13,7 @@ public class AssignDigBlock : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(UIManager.Instance.selectedManipulation == Manipulation.dig)
+        if(UIManager.Instance.selectedManipulation == Manipulation.assignDigBlock)
         {
             if(Input.GetMouseButton(0))
             {

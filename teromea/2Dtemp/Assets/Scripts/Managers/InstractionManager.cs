@@ -24,7 +24,7 @@ public class InstractionManager : SingletonMonoBehaviour<InstractionManager>
         {
             if(instraction.state == InstractionState.finished)
             {
-                DeleteInstraction(instraction);
+                FinishInstraction(instraction);
             }
             else if(instraction.state == InstractionState.cancel)
             {
@@ -40,16 +40,18 @@ public class InstractionManager : SingletonMonoBehaviour<InstractionManager>
         return instraction;
     }
 
-    private void DeleteInstraction(Instraction instraction)
+    private void FinishInstraction(Instraction instraction)
     {
+        Debug.Log(3);
         
         if(instraction.nextInstraction == null)
         {
             //空の命令を送信
-            instraction.executer?.ReceiveInstraction(new Instraction(InstractionType.noInstraction, null)); 
+            instraction.executer?.ReceiveInstraction(CleateInstraction(InstractionType.noInstraction, null)); 
         } 
         else
         {
+            Debug.Log(4);
             instraction.executer?.ReceiveInstraction(instraction.nextInstraction); 
         }    
         RemoveInstraction(instraction);
@@ -61,7 +63,7 @@ public class InstractionManager : SingletonMonoBehaviour<InstractionManager>
         if(instraction.nextInstraction == null)
         {
             //空の命令を送信
-            instraction.executer?.ReceiveInstraction(new Instraction(InstractionType.noInstraction, null)); 
+            instraction.executer?.ReceiveInstraction(CleateInstraction(InstractionType.noInstraction, null));
         } 
         else
         {
@@ -155,4 +157,5 @@ public enum InstractionState
     inProcess,
     finished,
     cancel,
+    stop,
 }

@@ -5,13 +5,15 @@ using UnityEngine;
 public static class PhysicsFunc
 {
     // Start is called before the first frame update
-    public static bool isThereAnyObjectOnThePoint(LayerMask layerMask)
+    public static bool isThereAnyObjectOnThePoint(Vector2 pos, LayerMask layerMask)
     {
-        Collider2D[] pointcols = Physics2D.OverlapPointAll(MousePointer.Instance.transform.position, layerMask: layerMask);
+        Collider2D[] pointcols = Physics2D.OverlapPointAll(pos, layerMask: layerMask);
         if(pointcols.Length > 0)
         {
             return true;
-        } else {
+        }
+        else
+        {
             return false;
         }
         

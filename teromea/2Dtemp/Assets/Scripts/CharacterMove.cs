@@ -18,8 +18,7 @@ public class CharacterMove : MonoBehaviour
 
     public bool isJump = false;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         rig = GetComponent<Rigidbody2D>();
         getObjectsAround = GetComponent<GetObjectsAround>();
@@ -37,16 +36,19 @@ public class CharacterMove : MonoBehaviour
         Coroutine coroutine = StartCoroutine(DecisionJump());
         while(!getObjectsAround.objectsAround.Contains(target))
         {
-            if(target.transform.position.x > rig.position.x)
+            if(target != null)
             {
-                direction = 1;
-            }
-            else
-            {
-                direction = -1;
-            }
+                if(target.transform.position.x > rig.position.x)
+                {
+                    direction = 1;
+                }
+                else
+                {
+                    direction = -1;
+                }
 
-            SetWalk(direction * walkspeed);
+                SetWalk(direction * walkspeed);
+            }
 
             yield return null;
         }
@@ -57,13 +59,13 @@ public class CharacterMove : MonoBehaviour
 
     }
 
-    public IEnumerator MoveToPosition(Vector2 pos)
+    public IEnumerator MoveToPosition(Vector2? pos)
     {
         Debug.Log("Move start");
         Coroutine coroutine = StartCoroutine(DecisionJump());
-        while(Vector2.Distance(targetposition, rig.position) > Model.BLOCK_SIZE * 0.2f)
+        while(Vector2.Distance(pos ?? rig.position, rig.position) > Model.BLOCK_SIZE * 0.1f)
         {
-            if(targetposition.x > rig.position.x)
+            if(pos?.x > rig.position.x)
             {
                 direction = 1;
             }

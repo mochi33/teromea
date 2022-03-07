@@ -26,7 +26,7 @@ public class SetInstraction : SingletonMonoBehaviour<SetInstraction>
         Debug.Log("StartAssignInstraction");
         foreach(Instraction instraction in instractionManager.instractionList)
         {
-            if(instraction.state == InstractionState.waiting)
+            if(instraction.state == InstractionState.waiting || instraction.type != InstractionType.noInstraction)
             {
                 float minDistance = Model.MAX_INSTRACTION_RANGE;
                 Human minHuman = null;
@@ -42,15 +42,58 @@ public class SetInstraction : SingletonMonoBehaviour<SetInstraction>
                         }
                     }
                 }
-                SetInstractionToHuman(instraction, minHuman);
+                if(minHuman != null)
+                {
+                    SetInstractionToHuman(instraction, minHuman);
+                }
             }
         }
     }
 
+    ///<Summary>
+    ///人に次の命令をセットし、現在の命令を終了させる。
+    ///<Summary>
     public void SetInstractionToHuman(Instraction instraction, Human human)
     {
         Debug.Log("SetInstractiion");
-        human?.ReceiveInstraction(instraction);
+
+        Instraction currentInstraction;
+        if((currentInstraction = human?.myInstraction) != null)
+        {
+            Debug.Log(1);
+            if(currentInstraction.nextInstraction == null)
+            {
+                Debug.Log(2);
+                currentInstraction.nextInstraction = instraction;
+                currentInstraction.state = InstractionState.finished;
+            }
+        }
+        
+    }
+
+    ///<Summary>
+    ///人に次の命令セットし、現在の命令を一時停止させる。
+    ///<Summary>
+    public void SetInterruptInstraction(Instraction instraction, Human human)
+    {
+        Debug.Log("SetInstractiion");
+
+        Instraction currentInstraction;
+        if((currentInstraction = human?.myInstraction) != null)
+        {
+            if(currentInstraction.nextInstraction == null)
+            {
+                currentInstraction.nextInstraction = instraction;
+                if(currentInstraction.type != InstractionType.noInstraction)
+                {
+                    currentInstraction.state = InstractionState.cancel;
+                }
+                else
+                {
+                    currentInstraction.state = InstractionState.finished;
+                }
+            }
+        }
     }
 
 }

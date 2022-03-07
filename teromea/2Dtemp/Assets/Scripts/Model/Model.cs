@@ -16,4 +16,16 @@ public class Model
 
     public const int MAX_ONINSTRACTION = 1000;
 
+    public const System.Int32 BLOCK_LAYER = 1 << 6;
+    public const System.Int32 TEMPBLOCK_LAYER = 1 << 7;
+
+    public const System.Int32 HUMAN_LAYER = 1 << 8;
+
+    public const System.Int32 MOVETARGET_LAYER = 1 << 9;
+    public struct HUMAN_SIZE
+    {
+        public const float HEIGHT = 0.9f;
+        public const float WIDTH = 0.5f;
+    }
+
 }

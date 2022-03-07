@@ -5,6 +5,7 @@ using UnityEngine;
 public class TempBlock : MonoBehaviour
 {
     BlockType blockType;
+    public bool isSelected = false;
     // Start is called before the first frame update
     void Start()
     {
