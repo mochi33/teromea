@@ -40,7 +40,8 @@ public class SetMovePoint : SingletonMonoBehaviour<SetMovePoint>
         
         void SetMoveInstraction(GameObject target)
         {
-            SetInstraction.Instance.SetInterruptInstraction(InstractionManager.Instance.CleateInstraction(InstractionType.move, target), executer);
+            Instraction instraction = InstractionManager.Instance.CleateInstraction(InstractionType.move, target);
+            SetInstraction.Instance.SetInstractionToHuman(instraction, executer);
         }
     }
 

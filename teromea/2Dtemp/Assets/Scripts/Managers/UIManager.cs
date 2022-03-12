@@ -15,6 +15,8 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
 
     public GameObject selectDirtButtom;
     public GameObject selectStoneButtom;
+
+    public GameObject selectLadderButtom;
     public Manipulation selectedManipulation = Manipulation.noManipulation;
     public BlockType selectedBlockType = BlockType.dirt;
     // Start is called before the first frame update
@@ -55,6 +57,12 @@ public class UIManager : SingletonMonoBehaviour<UIManager>
     {
         selectedManipulation = Manipulation.setBlock;
         selectedBlockType = BlockType.stone;
+    }
+
+    public void SelectLadderBlock()
+    {
+        selectedManipulation = Manipulation.setBlock;
+        selectedBlockType = BlockType.ladder;
     }
 
     public void SelectDig()

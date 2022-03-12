@@ -10,7 +10,7 @@ public class TempBlock : MonoBehaviour
     void Start()
     {
         transform.parent = GameObject.Find ("TempBlockManager").transform;
-        blockType = UIManager.Instance.selectedBlockType; //この文は仮で、本当はUIから選択しているブロックを持ってきて代入したい
+        blockType = UIManager.Instance.selectedBlockType; 
     }
 
     // Update is called once per frame

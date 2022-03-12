@@ -22,6 +22,11 @@ public class Model
     public const System.Int32 HUMAN_LAYER = 1 << 8;
 
     public const System.Int32 MOVETARGET_LAYER = 1 << 9;
+    public const System.Int32 LADDER_LAYER = 1 << 10;
+
+    public const float WORLD_WIDTH = 100f;
+
+    public const float WORLD_HEIGHT = 30f;
     public struct HUMAN_SIZE
     {
         public const float HEIGHT = 0.9f;

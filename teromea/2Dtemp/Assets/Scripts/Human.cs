@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Human : MonoBehaviour
 {    
+    public Vector2Int worldPos;
     public CharacterMove charmove;
 
     public Instraction myInstraction;
@@ -42,6 +43,7 @@ public class Human : MonoBehaviour
             spriteRenderer.material = standardMaterial;
         }
         
+        worldPos = World.GetWorldPosition(transform.position);
     }
 
     public void ReceiveInstraction(Instraction instraction)
@@ -115,9 +117,23 @@ public class Human : MonoBehaviour
         StopActionCoroutines();
     }
 
+    public void CancelInstraction(Instraction instraction)
+    {
+        if(instraction != null)
+        {
+            instraction.state = InstractionState.cancel;
+        }
+        StopActionCoroutines();
+    }
+
     public IEnumerator MoveToPosition(Instraction instraction)
     {
-        yield return StartCoroutine(charmove.MoveToPosition(instraction.target?.transform.position));
+        IEnumerator coroutine = charmove.Move(instraction.target?.transform.position, 0.5f);
+        yield return StartCoroutine(coroutine);
+        if(!(bool)coroutine.Current)
+        {
+            CancelInstraction(instraction);
+        }
         FinishInstraction(instraction);
         SetMovePoint.Instance.DeleteMoveTarget(instraction.target);
         yield break;
@@ -131,13 +147,17 @@ public class Human : MonoBehaviour
 
     public IEnumerator SetBlock(Instraction instraction)
     {
-        yield return StartCoroutine(charmove.MoveToTarget(instraction.target));
+        IEnumerator coroutine = charmove.Move(instraction.target?.transform.position, 1.5f);
+        yield return StartCoroutine(coroutine);
+        if(!(bool)coroutine.Current)
+        {
+            CancelInstraction(instraction);
+        }
         do
         {
             yield return new WaitForSeconds(1.0f);
         } 
         while(!ConvertTempBlockIntoBlock(instraction.target));
-        //たぶんキャラ移動コルーチンが動いてるときに対象がDestroyされてるせいで参照エラーがおきてる
         FinishInstraction(instraction);
         yield break;
 
@@ -157,7 +177,12 @@ public class Human : MonoBehaviour
     public IEnumerator Dig(Instraction instraction)
     {
         Block block = instraction.target.GetComponent<Block>();
-        yield return StartCoroutine(charmove.MoveToTarget(instraction.target));
+        IEnumerator coroutine = charmove.Move(instraction.target?.transform.position, 1.5f);
+        yield return StartCoroutine(coroutine);
+        if(!(bool)coroutine.Current)
+        {
+            CancelInstraction(instraction);
+        }
         do
         {
             yield return new WaitForSeconds(1.0f);
@@ -166,6 +191,18 @@ public class Human : MonoBehaviour
         while(block.hp > 0f);
         FinishInstraction(instraction);
         yield break;
+    }
+
+    private void OnCollisionStay2D(Collision2D other) {
+        if(other.gameObject.CompareTag("Block"))
+        {
+            if(PhysicsFunc.isThereAnyObjectOnThePoint(transform.position, Model.BLOCK_LAYER))
+            {
+                Vector2 pos = transform.position;
+                pos.y += Model.BLOCK_SIZE;
+                transform.position = pos;
+            }
+        }
     }
 
 }

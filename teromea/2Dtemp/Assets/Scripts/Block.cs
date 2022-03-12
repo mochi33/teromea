@@ -28,6 +28,11 @@ public class Block : MonoBehaviour
                 hp = 20f;
                 break;
 
+            case "Ladder":
+                type = BlockType.ladder;
+                hp = 10f;
+                break;
+
             default:
                 break;
 

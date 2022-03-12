@@ -24,7 +24,7 @@ public class TempBlockManager : SingletonMonoBehaviour<TempBlockManager>
     ///<Summary>
     public bool CleateTempBlock (Vector3 pos) 
     {
-        if(!PhysicsFunc.isThereAnyObjectOnThePoint(pos, Model.BLOCK_LAYER | Model.TEMPBLOCK_LAYER))
+        if(!PhysicsFunc.isThereAnyObjectOnThePoint(pos, Model.BLOCK_LAYER | Model.TEMPBLOCK_LAYER | Model.LADDER_LAYER))
         {
             GameObject tempBlock = Instantiate(prefabobj, pos, Quaternion.identity);
             tempblocks.Add(tempBlock);

@@ -138,6 +138,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   charmove: {fileID: 5752433933934199827}
+  inst: 
   standardMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   outLineMaterial: {fileID: 2100000, guid: 1e31bfcd5978ac344aa90c8dd4f987e9, type: 2}
   isSelected: 0
