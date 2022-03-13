@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class MousePointer : SingletonMonoBehaviour<MousePointer>
 {
@@ -10,7 +11,7 @@ public class MousePointer : SingletonMonoBehaviour<MousePointer>
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -23,7 +24,28 @@ public class MousePointer : SingletonMonoBehaviour<MousePointer>
         searchNearObjects();//マウスポインタ付近にあるBlockオブジェクトを取得
     }
 
-    private void searchNearObjects () {
+    private Vector3 prevPos;
+/*private void OnMouseDown()
+{
+    prevPos = Input.mousePosition;
+}
+
+private void OnMouseUp()
+{
+    Vector2 set = (prevPos + Input.mousePosition)/2;
+    Vector2 range = new Vector2(prevPos.x-Input.mousePosition.x,prevPos.y-Input.mousePosition.y);
+    Collider2D[] pointcol = Physics2D.OverlapBoxAll(set, range, 0);
+    foreach(Collider2D col in pointcol)
+    {
+        if(col.CompareTag("Block"))
+        {
+         col.GetComponent<Block>().Set();   
+        }
+    }    
+}
+*/
+    private void searchNearObjects()
+    {
         Collider2D[] cols = Physics2D.OverlapCircleAll(transform.position, Model.BLOCK_SIZE, LayerMask.GetMask("Block"));
         blocklength = cols.Length;
         for (int i = 0; i < cols.Length; i++)
@@ -32,8 +54,9 @@ public class MousePointer : SingletonMonoBehaviour<MousePointer>
         }
     }
 
-    private void initializeNearBlock () {
-        for (int i = 0; i < 9; i++) 
+    private void initializeNearBlock()
+    {
+        for (int i = 0; i < 9; i++)
         {
             nearBlock[i] = null;
         }

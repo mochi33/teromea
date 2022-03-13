@@ -1,11 +1,12 @@
 {"pos":{"x":-2.1747543811798097,"y":-0.4519520401954651},"name":"MousePointer"}
+{"pos":{"x":4.0,"y":-1.0},"name":"TempBlock (2)"}
+{"pos":{"x":3.0,"y":-1.0},"name":"TempBlock (3)"}
+{"pos":{"x":-2.0,"y":0.0},"name":"item_bow"}
+{"pos":{"x":0.0,"y":10.0},"name":"Enemy"}
+{"pos":{"x":-2.0,"y":-1.0},"name":"TempBlock (7)"}
+{"pos":{"x":-3.0,"y":-1.0},"name":"TempBlock (1)"}
+{"pos":{"x":-4.0,"y":-1.0},"name":"TempBlock (8)"}
+{"pos":{"x":-1.0,"y":-1.0},"name":"TempBlock"}
 {"pos":{"x":0.0,"y":-1.0},"name":"TempBlock (6)"}
 {"pos":{"x":1.0000001192092896,"y":-1.0},"name":"TempBlock (5)"}
 {"pos":{"x":2.0,"y":-1.0},"name":"TempBlock (4)"}
-{"pos":{"x":4.0,"y":-1.0},"name":"TempBlock (2)"}
-{"pos":{"x":3.0,"y":-1.0},"name":"TempBlock (3)"}
-{"pos":{"x":-4.0,"y":-1.0},"name":"TempBlock (8)"}
-{"pos":{"x":-3.0,"y":-1.0},"name":"TempBlock (1)"}
-{"pos":{"x":-2.0,"y":-1.0},"name":"TempBlock (7)"}
-{"pos":{"x":-1.0,"y":-1.0},"name":"TempBlock"}
-{"pos":{"x":-2.0,"y":0.0},"name":"item_bow"}
