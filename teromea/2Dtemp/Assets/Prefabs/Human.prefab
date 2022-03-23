@@ -14,9 +14,10 @@ GameObject:
   - component: {fileID: 1762672722}
   - component: {fileID: 1762672724}
   - component: {fileID: -5757253030094366393}
-  m_Layer: 0
+  - component: {fileID: 579924330669442521}
+  m_Layer: 8
   m_Name: Human
-  m_TagString: Untagged
+  m_TagString: Human
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 5410072398942559771}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.80909413, y: 1.6012875, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.9, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -102,9 +103,7 @@ MonoBehaviour:
   walkspeed: 1
   jumpforce: 300
   direction: 0
-  isOnPosition: 0
   isJump: 0
-  sideobject: {fileID: 0}
 --- !u!50 &1762672722
 Rigidbody2D:
   serializedVersion: 4
@@ -125,7 +124,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &1762672724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,6 +138,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   charmove: {fileID: 5752433933934199827}
+  inst: 
+  standardMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  outLineMaterial: {fileID: 2100000, guid: 1e31bfcd5978ac344aa90c8dd4f987e9, type: 2}
+  isSelected: 0
 --- !u!58 &-5757253030094366393
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -155,3 +158,20 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &579924330669442521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5410072398942559771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea7f3c59f71ddd6438ac44def9eec8ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectsAround: []
+  range: 1
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295

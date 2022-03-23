@@ -7,27 +7,12 @@ public class SetTempBlock : SingletonMonoBehaviour<TempBlockManager>
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButton(0))
+        if(UIManager.Instance.selectedManipulation == Manipulation.setBlock)
         {
-            //すでにブロックが存在していないかチェック
-            bool isputable = true;
-            Collider2D[] pointcol = Physics2D.OverlapPointAll(MousePointer.Instance.transform.position); 
-            foreach(Collider2D col in pointcol)
+            if(Input.GetMouseButton(0))
             {
-                if (col.gameObject.CompareTag("Block"))
+                for(int i = 0; i < MousePointer.Instance.blocklength; i++)
                 {
-                    isputable = false;
-                    Debug.Log("false");
-                }
-            }
-            //ここまで
-
-
-            if (isputable)
-            {
-                for (int i = 0; i < MousePointer.Instance.blocklength; i++)
-                {
-                    Debug.Log("putable");
                     float x = MousePointer.Instance.transform.position.x;
                     float y = MousePointer.Instance.transform.position.y;
                     float objx = MousePointer.Instance.nearBlock[i].transform.position.x;
@@ -35,12 +20,12 @@ public class SetTempBlock : SingletonMonoBehaviour<TempBlockManager>
                     bool ablex = false;
                     bool abley = false;
 
-                    if (Mathf.Abs(objx - x) < Model.BLOCK_SIZE * 1.5f && Mathf.Abs(objx - x) > Model.BLOCK_SIZE * 0.5f) 
+                    if(Mathf.Abs(objx - x) < Model.BLOCK_SIZE * 1.5f && Mathf.Abs(objx - x) > Model.BLOCK_SIZE * 0.5f) 
                     {
                         ablex = true;
                     }
 
-                    if (Mathf.Abs(objy - y) < Model.BLOCK_SIZE * 1.5f && Mathf.Abs(objy - y) > Model.BLOCK_SIZE * 0.5f) 
+                    if(Mathf.Abs(objy - y) < Model.BLOCK_SIZE * 1.5f && Mathf.Abs(objy - y) > Model.BLOCK_SIZE * 0.5f) 
                     {
                         abley = true;
                     }
@@ -49,25 +34,27 @@ public class SetTempBlock : SingletonMonoBehaviour<TempBlockManager>
                     {
                         if (ablex)
                         {
-                            if (x > objx)
+                           if(x > objx)
                             {
                                 TempBlockManager.Instance.CleateTempBlock(new Vector3(objx + Model.BLOCK_SIZE, objy, 0));
-                            } else {
+                            } 
+                            else 
+                            {
                                 TempBlockManager.Instance.CleateTempBlock(new Vector3(objx - Model.BLOCK_SIZE, objy, 0));
                             }
-
-                            break;
+                                break;
                         }
 
-                        if (abley)
+                        if(abley)
                         {
-                            if (y > objy)
+                            if(y > objy)
                             {
                                 TempBlockManager.Instance.CleateTempBlock(new Vector3(objx, objy + Model.BLOCK_SIZE, 0));
-                            } else {
+                            } 
+                            else 
+                            {
                                 TempBlockManager.Instance.CleateTempBlock(new Vector3(objx, objy - Model.BLOCK_SIZE, 0));
                             }
-
                             break;
                         }
                     }

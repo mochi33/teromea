@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public class MousePointer : SingletonMonoBehaviour<MousePointer>
 {
-    public GameObject[] nearBlock = new GameObject[9];
+    public GameObject[] nearBlock = new GameObject[100];
     public int blocklength = 0;
 
     // Start is called before the first frame update
@@ -24,6 +24,7 @@ public class MousePointer : SingletonMonoBehaviour<MousePointer>
         searchNearObjects();//マウスポインタ付近にあるBlockオブジェクトを取得
     }
 
+<<<<<<< HEAD
     private Vector3 prevPos;
 /*private void OnMouseDown()
 {
@@ -47,6 +48,12 @@ private void OnMouseUp()
     private void searchNearObjects()
     {
         Collider2D[] cols = Physics2D.OverlapCircleAll(transform.position, Model.BLOCK_SIZE, LayerMask.GetMask("Block"));
+=======
+    private void searchNearObjects () {
+        //レイヤーの指定https://www.ame-name.com/archives/5621
+        LayerMask layerMask = Model.BLOCK_LAYER | Model.TEMPBLOCK_LAYER | Model.LADDER_LAYER;
+        Collider2D[] cols = Physics2D.OverlapCircleAll(transform.position, Model.BLOCK_SIZE, layerMask);
+>>>>>>> origin/HashimotoNaoki
         blocklength = cols.Length;
         for (int i = 0; i < cols.Length; i++)
         {

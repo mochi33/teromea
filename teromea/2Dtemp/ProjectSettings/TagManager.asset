@@ -5,7 +5,14 @@ TagManager:
   serializedVersion: 2
   tags:
   - Block
+<<<<<<< HEAD
   - Enemy
+=======
+  - Human
+  - TempBlock
+  - MoveTarget
+  - Ladder
+>>>>>>> origin/HashimotoNaoki
   layers:
   - Default
   - TransparentFX
@@ -14,10 +21,10 @@ TagManager:
   - Water
   - UI
   - Block
-  - 
-  - 
-  - 
-  - 
+  - TempBlock
+  - Human
+  - MoveTarget
+  - Ladder
   - 
   - 
   - 
