@@ -22,6 +22,8 @@ public class CharacterMove : MonoBehaviour
 
     public Vector2 targetPosition;
 
+    public bool isOnLadder = false;
+
     void Awake()
     {
         rig = GetComponent<Rigidbody2D>();
@@ -37,7 +39,18 @@ public class CharacterMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if(!BlockManager.Instance.ladderMap[human.worldPos.x, human.worldPos.y])
+        {
+            isOnLadder = false;
+        }
+        if(isOnLadder)
+        {
+            rig.bodyType = RigidbodyType2D.Kinematic;
+        }
+        else
+        {
+            rig.bodyType = RigidbodyType2D.Dynamic;
+        }
     }
 
     public IEnumerator Move(Vector2? targetPos1, float distance)
@@ -47,9 +60,7 @@ public class CharacterMove : MonoBehaviour
             if(targetPos1 != null)
             {
                 Vector2 targetPos = (Vector2)targetPos1;
-                IEnumerator coroutine = SearchRoot(targetPos, distance);
-                yield return StartCoroutine(coroutine);
-                List<MoveInfo> moveInfos = (List<MoveInfo>)coroutine.Current;
+                List<MoveInfo> moveInfos = SearchRoot(targetPos, distance);
                 if(moveInfos == null)
                 {
                     yield return false;
@@ -62,7 +73,7 @@ public class CharacterMove : MonoBehaviour
                         case MoveType.walk:
                         moveType = MoveType.walk;
                         targetPosition = moveInfos[i].targetPosition;
-                        if(i + 1 < moveInfos.Count && moveInfos[i + 1].moveType == MoveType.radder)
+                        if(i + 1 < moveInfos.Count && (moveInfos[i + 1].moveType == MoveType.radder || moveInfos[i + 1].moveType == MoveType.fall))
                         {
                             yield return StartCoroutine(MoveToPosition(moveInfos[i].targetPosition, 0.2f));
                         }
@@ -98,49 +109,16 @@ public class CharacterMove : MonoBehaviour
 
 
     }
-    public IEnumerator MoveToTarget(GameObject target)
+
+    //目的地に向かってキャラを単純移動させる、1段までの段差は自動的にジャンプする
+    public IEnumerator MoveToPosition(Vector2 pos, float distance)
     {
         Debug.Log("Move start");
         bool[,] ladderMap = BlockManager.Instance.ladderMap;
         Coroutine coroutine = StartCoroutine(DecisionJump());
-        while(!getObjectsAround.objectsAround.Contains(target))
+        while(Mathf.Abs(pos.x - rig.transform.position.x) > distance || Mathf.Abs(pos.y - rig.transform.position.y) > distance)
         {
-            if(target != null)
-            {
-                if(target.transform.position.x > rig.position.x)
-                {
-                    direction = 1;
-                }
-                else
-                {
-                    direction = -1;
-                }
-
-                SetWalk(direction * walkspeed);
-            }
-            if(ladderMap[human.worldPos.x, human.worldPos.y])
-            {
-                Vector2 velocity = rig.velocity;
-                velocity.y = 0;
-            }
-
-            yield return null;
-        }
-        direction = 0;
-        StopCoroutine(coroutine);
-        StopWalk();
-        yield break;
-
-    }
-
-    public IEnumerator MoveToPosition(Vector2? pos, float distance)
-    {
-        Debug.Log("Move start");
-        bool[,] ladderMap = BlockManager.Instance.ladderMap;
-        Coroutine coroutine = StartCoroutine(DecisionJump());
-        while(Vector2.Distance(pos ?? rig.position, rig.position) > Model.BLOCK_SIZE * distance)
-        {
-            if(pos?.x > rig.position.x)
+            if(pos.x > rig.position.x)
             {
                 direction = 1;
             }
@@ -150,10 +128,14 @@ public class CharacterMove : MonoBehaviour
             }
 
             SetWalk(direction * walkspeed);
-            if(ladderMap[human.worldPos.x, human.worldPos.y])
+
+            if(ladderMap[human.worldPos.x, human.worldPos.y] && Mathf.Abs(rig.transform.position.x - pos.x) > Model.BLOCK_SIZE * 0.5f)
             {
-                Vector2 velocity = rig.velocity;
-                velocity.y = 0;
+                isOnLadder = true;
+            }
+            else
+            {
+                isOnLadder = false;
             }
 
             yield return null;
@@ -210,6 +192,7 @@ public class CharacterMove : MonoBehaviour
         }
     }
 
+    //はしご上で移動する
     public IEnumerator MoveOnLadder(Vector2? pos1)
     {
         bool[,] ladderMap = BlockManager.Instance.ladderMap;
@@ -217,8 +200,9 @@ public class CharacterMove : MonoBehaviour
         {
             Vector2 pos = (Vector2)pos1;
             while(ladderMap[human.worldPos.x, human.worldPos.y])
-            {
+            { 
                 Vector2 velocity = rig.velocity;
+                isOnLadder = true;
                 if(transform.position.y < pos.y)
                 {
                     velocity.y = 1.0f;
@@ -242,28 +226,31 @@ public class CharacterMove : MonoBehaviour
                 rig.velocity = velocity;
                 if(Mathf.Abs(pos.y - rig.transform.position.y) < Model.BLOCK_SIZE * 0.2f)
                 {
+                    velocity.y = 0;
+                    rig.velocity = velocity;
                     yield break;
                 }
                 yield return null;
             }
+            isOnLadder = false;
         }
         yield break;
 
     }
 
+    //ただ落ちる
     public IEnumerator Fall(Vector2 pos)
     {
+        StopWalk();
         while(Vector2.Distance(transform.position, pos) > 0.1f)
         {
-            StopWalk();
             yield return null;
         }
         yield break;
     }
 
-    private IEnumerator SearchRoot(Vector2 pos, float distance)
+    public List<MoveInfo> SearchRoot(Vector2 pos, float distance)
     {
-        yield return null;
         List<MoveInfo> moveInfos = new List<MoveInfo>();
         Vector2Int curWorldPos = World.GetWorldPosition(gameObject.transform.position);
         Vector2Int targetWorldPos = World.GetWorldPosition(pos);
@@ -289,7 +276,6 @@ public class CharacterMove : MonoBehaviour
         
         while(true)
         {
-            yield return null;
             if(branchInfos.Count <= 0)
             {
                 Debug.Log("no root");
@@ -470,8 +456,7 @@ public class CharacterMove : MonoBehaviour
 
                         }
                     }
-                    yield return moveInfos;
-                    yield break;
+                    return moveInfos;
                 }
                 
             }
@@ -498,16 +483,14 @@ public class CharacterMove : MonoBehaviour
                 }
             }
 
-            if(num++ > 100)
+            if(num++ > 500)
             {
                 break;
             }
             Debug.Log(5);
         }
 
-        
-        // return moveInfos;
-        yield return null;
+        return null;
 
         BranchInfo GoNextBranchOnGround(int direction)
         {
@@ -521,8 +504,8 @@ public class CharacterMove : MonoBehaviour
                 GetObjectsAroundOnGround(direction);
                 Debug.Log(12345);
                 
-                //到達判定
-                if(Mathf.Abs(curWorldPos.x - targetWorldPos.x) < distance && Mathf.Abs(curWorldPos.y - targetWorldPos.y) < distance)
+                //到達判定、距離が近く、下にブロックが存在している時到達
+                if(Mathf.Abs(curWorldPos.x - targetWorldPos.x) < distance && Mathf.Abs(curWorldPos.y - targetWorldPos.y) < distance && objectsAround[4])
                 {
                     Debug.Log("Goal");
                     return new BranchInfo(curWorldPos, new List<Way>(), true);
@@ -605,7 +588,7 @@ public class CharacterMove : MonoBehaviour
                 Debug.Log(BlockManager.Instance.ladderMap[curWorldPos.x, curWorldPos.y + 1 * upOrDown]);
 
                 //到達判定
-                if(Mathf.Abs(curWorldPos.x - targetWorldPos.x) < distance && Mathf.Abs(curWorldPos.y - targetWorldPos.y) < distance)
+                if(Mathf.Abs(curWorldPos.x - targetWorldPos.x) < distance && Mathf.Abs(curWorldPos.y - targetWorldPos.y) < distance && objectsAround[6])
                 {
                     return new BranchInfo(curWorldPos, new List<Way>(), true);
                 }

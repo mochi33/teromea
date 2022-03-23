@@ -35,7 +35,7 @@ public class SetInstraction : SingletonMonoBehaviour<SetInstraction>
                 foreach(Human human in humanManager.humanList)
                 {
                     if(human.myInstraction?.type == InstractionType.noInstraction
-                    && human.myInstraction?.nextInstraction == null)
+                    && human.myInstraction?.nextInstraction == null && human.GetIsMoveAble(instraction.target.transform.position))
                     {
                         float distance = Vector2.Distance(human.gameObject.transform.position, instraction.target.transform.position);
                         if (distance < minDistance)

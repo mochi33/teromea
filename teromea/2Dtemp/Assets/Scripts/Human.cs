@@ -98,6 +98,18 @@ public class Human : MonoBehaviour
         }
     }
 
+    public bool GetIsMoveAble(Vector2 pos)
+    {
+        if(charmove.SearchRoot(pos, 2.0f) != null)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public void StopActionCoroutines()
     {
         charmove.StopAllCoroutines();
@@ -143,11 +155,12 @@ public class Human : MonoBehaviour
     {
         FinishInstraction(instraction);
         yield break;
+
     }
 
     public IEnumerator SetBlock(Instraction instraction)
     {
-        IEnumerator coroutine = charmove.Move(instraction.target?.transform.position, 1.5f);
+        IEnumerator coroutine = charmove.Move(instraction.target?.transform.position, 2.0f);
         yield return StartCoroutine(coroutine);
         if(!(bool)coroutine.Current)
         {
@@ -177,7 +190,7 @@ public class Human : MonoBehaviour
     public IEnumerator Dig(Instraction instraction)
     {
         Block block = instraction.target.GetComponent<Block>();
-        IEnumerator coroutine = charmove.Move(instraction.target?.transform.position, 1.5f);
+        IEnumerator coroutine = charmove.Move(instraction.target?.transform.position, 2.0f);
         yield return StartCoroutine(coroutine);
         if(!(bool)coroutine.Current)
         {

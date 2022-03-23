@@ -16,7 +16,7 @@ public class InstractionManager : SingletonMonoBehaviour<InstractionManager>
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         instractionCount = instractionList.Count;
         List<Instraction> tempList = new List<Instraction>(instractionList);
