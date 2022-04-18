@@ -588,7 +588,7 @@ public class CharacterMove : MonoBehaviour
                 Debug.Log(BlockManager.Instance.ladderMap[curWorldPos.x, curWorldPos.y + 1 * upOrDown]);
 
                 //到達判定
-                if(Mathf.Abs(curWorldPos.x - targetWorldPos.x) < distance && Mathf.Abs(curWorldPos.y - targetWorldPos.y) < distance && objectsAround[6])
+                if(Mathf.Abs(curWorldPos.x - targetWorldPos.x) < distance && Mathf.Abs(curWorldPos.y - targetWorldPos.y) < distance)// && objectsAround[6]
                 {
                     return new BranchInfo(curWorldPos, new List<Way>(), true);
                 }

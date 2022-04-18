@@ -20,7 +20,7 @@ public class test : MonoBehaviour
     {
         while(true)
         {
-            SetInstraction.Instance.AssignInstraction();
+            StartCoroutine(SetInstraction.Instance.AssignInstraction());
             yield return new WaitForSeconds(2.0f);
         }
     }

@@ -66,7 +66,7 @@ public class BlockManager : SingletonMonoBehaviour<BlockManager>
         if(!PhysicsFunc.isThereAnyObjectOnThePoint(pos, Model.BLOCK_LAYER | Model.LADDER_LAYER)
         && World.isOnWorld(pos))
         {
-            GameObject blockObj;
+            GameObject blockObj = null;
             switch(blockType)
             {
                 case BlockType.dirt:
@@ -87,6 +87,11 @@ public class BlockManager : SingletonMonoBehaviour<BlockManager>
                 default:
                 return false;
 
+            }
+            Block block = blockObj?.GetComponent<Block>();
+            if(block != null)
+            {
+                block.type = blockType;
             }
             return true;
         } 

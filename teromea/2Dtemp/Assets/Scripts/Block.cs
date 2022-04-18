@@ -16,19 +16,19 @@ public class Block : MonoBehaviour
     {
         transform.parent = GameObject.Find ("BlockManager").transform;
         spriteRenderer = GetComponent<SpriteRenderer>();
-        switch(gameObject.name)
+        switch(type)
         {
-            case "Dirt":
+            case BlockType.dirt:
                 type = BlockType.dirt;
                 hp = 10f;
                 break;
             
-            case "Stone":
+            case BlockType.stone:
                 type = BlockType.stone;
                 hp = 20f;
                 break;
 
-            case "Ladder":
+            case BlockType.ladder:
                 type = BlockType.ladder;
                 hp = 10f;
                 break;
@@ -42,7 +42,7 @@ public class Block : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(hp < 0f)
+        if(hp <= 0f)
         {
             BlockManager.Instance.DeleteBlock(gameObject);
         }

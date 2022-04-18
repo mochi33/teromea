@@ -200,8 +200,7 @@ public class Human : MonoBehaviour
         {
             yield return new WaitForSeconds(1.0f);
             block.hp -= 5.0f;
-        } 
-        while(block.hp > 0f);
+        } while(block.hp > 0f);
         FinishInstraction(instraction);
         yield break;
     }

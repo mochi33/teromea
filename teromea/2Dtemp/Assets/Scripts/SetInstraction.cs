@@ -23,7 +23,7 @@ public class SetInstraction : SingletonMonoBehaviour<SetInstraction>
     ///<Summary>
     ///命令に割り当てる人を決定し実行させる、とりあえず仮で命令対象に一番近い人に命令を割り当てるようにした
     ///<Summary>
-    public void AssignInstraction()
+    public IEnumerator AssignInstraction()
     {
         Debug.Log("StartAssignInstraction");
         foreach(Instraction instraction in instractionManager.instractionList)
@@ -48,9 +48,49 @@ public class SetInstraction : SingletonMonoBehaviour<SetInstraction>
                 if(minHuman != null)
                 {
                     SetInstractionToHuman(instraction, minHuman);
+                    yield return null;
                 }
             }
         }
+        yield break;
+
+        // foreach(Human human in humanManager.humanList)
+        // {
+        //     Vector2 humanPos = human.transform.position;
+        //     List<Instraction> instList = new List<Instraction>();
+        //     foreach(Instraction inst in instractionManager.instractionList)
+        //     {
+        //         if(inst.state == InstractionState.waiting)
+        //         {
+        //             instList.Add(inst);
+        //         }
+        //     }
+        //     int count = instList.Count;
+        //     while(count-- > 0)
+        //     {
+        //         float minDistance = Model.MAX_INSTRACTION_RANGE;
+        //         Instraction minInst = null;
+        //         foreach(Instraction inst in instList)
+        //         {
+        //             if(Vector2.Distance(humanPos, inst.target.transform.position) < minDistance)
+        //             {
+        //                 minInst = inst;
+        //                 minDistance = Vector2.Distance(humanPos, inst.target.transform.position);
+        //             }
+        //         }
+        //         if(minInst != null)
+        //         {
+        //             instList.Remove(minInst);
+        //             if(human.GetIsMoveAble(minInst.target.transform.position))
+        //             {
+        //                 SetInstractionToHuman(minInst, human);
+        //                 break;
+        //             }
+        //         }
+        //     }
+        //     yield return null;
+
+        // }
     }
 
     ///<Summary>
